@@ -1,16 +1,22 @@
-import logo from './logo.svg';
+import { useState, useEffect } from 'react';
+
 import './App.css';
 import Autocomplete from './component/AutoComplete';
+import JSONDATA from './users.json';
 
 function App() {
-  return (
-    <div>
-      <h1>React Autocomplete Demo</h1>
-      <h2>Start typing and experience the autocomplete wizardry!</h2>
-      <Autocomplete suggestions={"Oranges", "Apples", "Banana", "Kiwi", "Mango"}/>
-      {/* {console.log(suggestions)} */}
-    </div>
-  );
+
+
+  const [userSearch, setUserSearch] = useState('');
+
+  const [users, setUsers] = useState(JSONDATA);
+
+  return <div>
+    <h1>Testing Data </h1>
+    {/* <input type='text' placeholder='Search...' onChange={event => { setUserSearch(event.target.value) }} /> */}
+    
+    <Autocomplete users={JSONDATA} />
+  </div>
 }
 
 export default App;

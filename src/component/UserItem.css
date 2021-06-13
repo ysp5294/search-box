@@ -1,0 +1,31 @@
+.user-item {
+    display: flex;
+    flex-direction: column;
+    width: 20rem;
+    height: 5rem;
+    border: 1px solid #ececec;
+    background-color: #ebd497;
+    color: rgb(0, 0, 0);
+    border-radius: 1px;
+    align-items: left;
+    justify-content: center;
+  }
+  
+  .user-item__id {
+    font-size: .9rem;
+    font-weight: bold;
+  }
+  
+  .user-item__name {
+    font-size: 1rem;
+    font-style: italic;
+  }
+  
+  .user-item__address {
+    font-size: .9rem;
+    /* font-weight: bold; */
+  }
+
+  .user-item:hover {
+      background-color: beige;
+  }

@@ -1,133 +1,55 @@
 
-import React, { Component, Fragment } from "react";
+import React, { useState } from "react";
 // import './styles.css'
 
-class Autocomplete extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            activeSuggestion: 0,
-            filteredSuggestions: [],
-            showSuggestions: false,
-            userInput: ""
-        };
+import Searchbox from './Searchbox';
+import UserItem from './UserItem';
+import './AutoComplete.css';
+
+const AutoComplete = props => {
+    console.log(props.users);
+    const [userSearchByName, setUserSearchByName] = useState("");
+    // const [userSearchById, setUserSearchById] = useState("");
+
+
+    const filterChangeHandler = selectedUser => {
+        setUserSearchByName(selectedUser);
+        // setUserSearchById(event.target.value);
+        // console.log(userSearchByName);
     }
 
-    onChange = e => {
-        // const suggestions = [];
-        const suggestions = this.props;
-        const userInput = e.currentTarget.value;
-        console.log(userInput);
-        console.log(this.props);
+    const filteredUsers = props.users.filter(user => {
+        return user.name.toLowerCase().includes(userSearchByName);
+    });
 
-        const filteredSuggestions = () => {
-            suggestions.filter(
-                suggestion =>
-                    suggestion.toLowerCase().indexOf(userInput.toLowerCase()) > -1
-            );
-        };
-        // console.log(filteredSuggestions());
 
-        this.setState({
-            activeSuggestion: 0,
-            filteredSuggestions,
-            showSuggestions: true,
-            userInput: e.currentTarget.value
-        });
-    };
+    let userContent = <p>No user Found!</p>;
 
-    onClick = e => {
-        this.setState({
-            activeSuggestion: 0,
-            filteredSuggestions: [],
-            showSuggestions: false,
-            userInput: e.currentTarget.innerText
-        });
-    };
-
-    onKeyDown = e => {
-        const { activeSuggestion, filteredSuggestions } = this.state;
-
-        if (e.keyCode === 13) {
-            this.setState({
-                activeSuggestion: 0,
-                showSuggestions: false,
-                userInput: filteredSuggestions[activeSuggestion]
-            });
-        } else if (e.keyCode === 38) {
-            if (activeSuggestion === 0) {
-                return;
-            }
-            this.setState({ activeSuggestion: activeSuggestion - 1 });
-        }
-        // User pressed the down arrow, increment the index
-        else if (e.keyCode === 40) {
-            if (activeSuggestion - 1 === filteredSuggestions.length) {
-                return;
-            }
-            this.setState({ activeSuggestion: activeSuggestion + 1 });
-        }
-    };
-
-    render() {
-        const {
-            onChange,
-            onClick,
-            onKeyDown,
-            state: {
-                activeSuggestion,
-                filteredSuggestions,
-                showSuggestions,
-                userInput
-            }
-        } = this;
-
-        let suggestionsListComponent;
-
-        if (showSuggestions && userInput) {
-            if (filteredSuggestions.length) {
-                suggestionsListComponent = (
-                    <ul class="suggestions">
-                        {filteredSuggestions.map((suggestion, index) => {
-                            let className;
-
-                            // Flag the active suggestion with a class
-                            if (index === activeSuggestion) {
-                                className = "suggestion-active";
-                            }
-                            return (
-                                <li className={className} key={suggestion} onClick={onClick}>
-                                    {suggestion}
-                                </li>
-                            );
-                        })}
-                    </ul>
-                );
-            } else {
-                suggestionsListComponent = (
-                    <div class="no-suggestions">
-                        <em>No suggestions available.</em>
-                    </div>
-                );
-            }
-        }
-
-        return (
-            <Fragment>
-                <input
-                    type="text"
-                    onChange={onChange}
-                    onKeyDown={onKeyDown}
-                    value={userInput}
-                />
-                {suggestionsListComponent}
-            </Fragment>
-        );
+    if (filteredUsers.length > 0) {
+        userContent = filteredUsers.map(user => (
+            <UserItem
+                id={user.id}
+                name={user.name}
+                address={user.address}
+            />
+        ));
     }
+
+    return <div >
+        <Searchbox onChangeValue={filterChangeHandler} />
+       
+        {!userSearchByName && <div className='scroll'>
+            
+        </div>} 
+
+        {userSearchByName && <div className='scroll'>
+            {userContent}
+            </div>}
+    </div>
 }
 
 
-export default Autocomplete;
+export default AutoComplete;
 
 
 
