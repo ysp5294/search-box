@@ -5,7 +5,7 @@ const Searchbox = props => {
 
     // console.log(props);
     const contentChangeHandler = event => {
-        props.onChangeValue(event.target.value);
+        props.onChangeValue(event.target.value.toLowerCase());
         // console.log(props.value);
         // props.preventDefault();
     }
