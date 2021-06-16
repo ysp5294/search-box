@@ -1,5 +1,5 @@
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 // import './styles.css'
 
 import Searchbox from './Searchbox';
@@ -7,44 +7,67 @@ import UserItem from './UserItem';
 import './AutoComplete.css';
 
 const AutoComplete = props => {
-    console.log(props.users);
-    const [userSearchByName, setUserSearchByName] = useState("");
-    // const [userSearchById, setUserSearchById] = useState("");
+    
+    const [userSearch, setUserSearch] = useState("");
+    
+    const [filteredUsers, setFilteredUsers] = useState([]);
 
 
     const filterChangeHandler = selectedUser => {
-        setUserSearchByName(selectedUser);
-        // setUserSearchById(event.target.value);
-        // console.log(userSearchByName);
+        setUserSearch(selectedUser);
     }
 
-    const filteredUsers = props.users.filter(user => {
-        return user.name.toLowerCase().includes(userSearchByName);
+    const arr = Object.values(props.users);
+    let tempUser = [];
+
+    Object.values(arr).map(value => {
+        let user = Object.values(value);
+
+        for (let i = 0; i < user.length; i++) {
+
+            if (typeof user[i] === 'string') {
+
+                if (user[i].toLowerCase().includes(userSearch)) {
+                    tempUser.push(user);
+                    break;
+                }
+            } else {
+                if (user[i] === userSearch) {
+                    tempUser.push(user);
+                    break;
+                }
+            }
+        }
+        
+        
     });
 
+ 
+    useEffect(() => {
+
+        setFilteredUsers(tempUser);
+    }, [userSearch]);
 
     let userContent = <p>No user Found!</p>;
 
     if (filteredUsers.length > 0) {
-        userContent = filteredUsers.map(user => (
+        userContent = filteredUsers.map( (user, index) => (
             <UserItem
-                id={user.id}
-                name={user.name}
-                address={user.address}
+                users={user}
             />
         ));
     }
 
     return <div >
         <Searchbox onChangeValue={filterChangeHandler} />
-       
-        {!userSearchByName && <div className='scroll'>
-            
-        </div>} 
 
-        {userSearchByName && <div className='scroll'>
+        {!userSearch && <div className='scroll'>
+
+        </div>}
+
+        {userSearch && <div className='scroll'>
             {userContent}
-            </div>}
+        </div>}
     </div>
 }
 
